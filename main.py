@@ -23,7 +23,7 @@ __  __       _        _                             _
                                                         |___/              
 """)
 
-    print("1. Check if Matrix is Diagonalizable")
+    print("1. Check Diagonalizability")
     print("2. Perform LU Decomposition")
     print("3. Find Dominant Eigenvalue")
     print("4. Singular Value Decomposition (SVD)")
