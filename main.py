@@ -125,7 +125,15 @@ ___  _                         _ _         _    _    ___
             |___/                                         
 """)
 
-    # Your diagonalizable matrix logic here (Richie)
+    matrix = input_squareMatrix()
+    n = len(matrix)
+    
+    ### Your diagonalizable matrix logic here (Richie) ###
+
+    print()
+    print("Press Enter to go back to main menu...")
+    input()
+    mainMenu()
 
 def LUDecomposition():
     clear()
@@ -186,8 +194,16 @@ ___             _                __
 /___/_/\_, /\__/_//_/___/\_,_/_/\_,_/\__/ 
     /___/                               
 """)
+    
+    matrix = input_squareMatrix()
+    n = len(matrix)
+    
+    ### Your dominant eigenvalue logic here (Weneville) ###
 
-    # Your dominant eigenvalue logic here (Weneville)
+    print()
+    print("Press Enter to go back to main menu...")
+    input()
+    mainMenu()
 
 def svd():
     clear()
@@ -198,8 +214,16 @@ def svd():
 .-'    | \   /   |  '--'  / 
 `-----'   `-'    `-------'                         
 """)
+
+    matrix = input_matrix()
+    n = len(matrix)
     
-    # Your dominant svd logic here (Nathan)
+    ### Your svd logic here (Nathan) ###
+
+    print()
+    print("Press Enter to go back to main menu...")
+    input()
+    mainMenu()
     
 if __name__ == "__main__":
     mainMenu()
