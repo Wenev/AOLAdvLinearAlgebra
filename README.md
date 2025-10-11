@@ -1,6 +1,8 @@
 # Advanced Linear Algebra AOL
 
 > A compact Python toolkit to **analyze matrices** for an Advanced Linear Algebra project. This README is a complete guide with theory bites, clean implementations, and copy‑paste examples.
+>
+> DOCUMENTATION : https://www.overleaf.com/7197799756bxnnmbcqnnbs#b3838c
 
 ---
 
