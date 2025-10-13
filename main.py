@@ -166,16 +166,19 @@ __   __  __  ___                                   _ __  _
                 temp_sum = sum(lower[k][j] * upper[j][i] for j in range(i))
                 if upper[i][i] == 0:
                     print("Matrix is singular — cannot perform LU decomposition.")
-                    return None, None
+                    print()
+                    print("Press Enter to go back to main menu...")
+                    input()
+                    mainMenu()
                 lower[k][i] = (matrix[k][i] - temp_sum) / upper[i][i]
 
     print("\nLower Triangular Matrix:")
     for row in lower:
-        print(row)
+        print([f"{x:.2f}" for x in row])
         
     print("\nUpper Triangular Matrix:")
     for row in upper:
-        print(row)
+        print([f"{x:.2f}" for x in row])
         
     print()
     print("Press Enter to go back to main menu...")
