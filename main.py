@@ -127,9 +127,36 @@ ___  _                         _ _         _    _    ___
 
     matrix = input_squareMatrix()
     n = len(matrix)
+    A = np.array(matrix, dtype=float)
     
-    ### Your diagonalizable matrix logic here (Richie) ###
+    eigvals, eigvecs = np.linalg.eig(A)
+    
+    rank = np.linalg.matrix_rank(eigvecs)
 
+    unique_eigs = np.unique(np.round(eigvals, 6))
+    diagonalizable = True
+
+    for eig in unique_eigs:
+        algebraic_mult = np.sum(np.isclose(eigvals, eig))
+
+        B = A - eig * np.eye(n)
+        geometric_mult = n - np.linalg.matrix_rank(B)
+
+        if geometric_mult < algebraic_mult:
+            diagonalizable = False
+
+
+    print("\nEigenvalues:")
+    print(np.round(eigvals, 4))
+
+    print("\nEigenvectors:")
+    print(np.round(eigvecs, 4))
+
+    if diagonalizable:
+        print("\nMatrix IS diagonalizable!")
+    else:
+        print("\nMatrix is NOT diagonalizable.")
+    
     print()
     print("Press Enter to go back to main menu...")
     input()
