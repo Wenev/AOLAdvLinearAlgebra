@@ -273,13 +273,6 @@ def svd():
     k = min(k, r)
 
     U = np.zeros((m, m))
-
-    if k > 0:
-        Uk = (A @ V[:, :k]) / sigma[:k][None, :]
-        U[:, :k] = Uk
-    else:
-        pass
-  
     U[:, :k] = (A @ V[:, :k]) / sigma[:k].reshape(1, -1)
 
     d = np.sign(np.diag(U[:, :k].T @ A @ V[:, :k]))
