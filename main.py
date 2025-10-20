@@ -1,5 +1,6 @@
 import numpy as np
 import os
+from dominant_eigen_value import power_method
 
 # Clear Screen
 def clear():
@@ -227,10 +228,11 @@ ___             _                __
     
     matrix = input_squareMatrix()
     n = len(matrix)
-    
+    matrix = np.array(matrix)
     ### Your dominant eigenvalue logic here (Weneville) ###
-
-    print()
+    eig, x = power_method(matrix)
+    print(f"Dominant eigenvalue: {eig}")
+    print(f"Dominant eigenvector: {x}")
     print("Press Enter to go back to main menu...")
     input()
     mainMenu()
