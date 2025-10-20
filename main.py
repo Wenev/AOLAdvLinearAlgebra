@@ -217,13 +217,60 @@ def svd():
 .-'    | \   /   |  '--'  / 
 `-----'   `-'    `-------'                         
 """)
+    np.set_printoptions(precision=4, suppress=True)
+    A = np.array(input_matrix()) #A = U S VT
+    m, n = A.shape
+    r = min(m, n)
 
-    matrix = input_matrix()
-    n = len(matrix)
-    
-    ### Your svd logic here (Nathan) ###
+    #AAT = A @ A.T
+    #lamU, U = np.linalg.eigh(AAT)
+    #idxU = lamU.argsort()[::-1]
+    #lamU = lamU[idxU]
+    #U = U[:, idxU]
 
-    print()
+    ATA = A.T @ A
+    lamV, V = np.linalg.eigh(ATA)
+    idxV = lamV.argsort()[::-1]
+    lamV = lamV[idxV]
+    V = V[:, idxV]
+
+    #lamU = np.clip(lamU, 0.0, None)
+    lamV = np.clip(lamV, 0.0, None)
+    sigma = np.sqrt(lamV) #averaging in case of mismatch due to floating point rounding errors
+
+    eps = np.finfo(float).eps
+    tol = max(m, n) * eps * (sigma[0] if r else 0.0)
+    k = int(np.sum(sigma > tol)) # numerical rank
+
+    U = np.zeros((m, m))
+    U[:, :k] = (A @ V[:, :k]) / sigma[:k].reshape(1, -1)
+
+    d = np.sign(np.diag(U[:, :k].T @ A @ V[:, :k]))
+    d[d == 0] = 1.0
+    U[:, :k] *= d.reshape(1, -1)
+    V[:, :k] *= d.reshape(1, -1)
+
+    if m > k:
+        Z = np.random.randn(m, m - k)
+        Z -= U[:, :k] @ (U[:, :k].T @ Z)
+        U2, _ = np.linalg.qr(Z)
+        U[:, k:] = U2
+
+    Sigma = np.zeros((m, n))
+    Sigma[np.arange(r), np.arange(r)] = sigma[:r]
+
+    def zapsmall(M, Aref=None, rel=50*np.finfo(float).eps, abs_=0.0):
+        scale = np.linalg.norm(A if Aref is None else Aref, ord=np.inf)
+        thr = abs_ + rel * scale
+        M[np.abs(M) < thr] = 0.0
+        return M
+
+    U = zapsmall(U, A)
+    V = zapsmall(V, A)
+    Sigma = zapsmall(Sigma, A)
+
+    print(f"\n\nU = {U};\n\nΣ = {Sigma};\n\nV_T = {V.T}")
+    print(f"Check\nA = U Σ V_T = {zapsmall(U @ Sigma @ V.T, A)};")
     print("Press Enter to go back to main menu...")
     input()
     mainMenu()
