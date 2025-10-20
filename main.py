@@ -44,10 +44,10 @@ __  __       _        _                             _
             svd()
             break
         elif choice == "5":
-            print("\n👋 Exiting Matrix Analyzer Tool. Goodbye!")
+            print("\nExiting Matrix Analyzer Tool. Goodbye!")
             break
         else:
-            print("\n❌ Invalid choice. Please enter a number from 1 to 5.")
+            print("\nInvalid choice. Please enter a number from 1 to 5.")
 
 # For Matrix Input (Non-Square for SVD)
 def input_matrix():
@@ -57,7 +57,7 @@ def input_matrix():
             cols = int(input("Enter number of columns: "))
             break
         except ValueError:
-            print("❌ Please enter valid integers for rows and columns.\n")
+            print("Please enter valid integers for rows and columns.\n")
 
     print("\nEnter the matrix values row by row (separated by spaces):")
     matrix = []
@@ -127,9 +127,36 @@ ___  _                         _ _         _    _    ___
 
     matrix = input_squareMatrix()
     n = len(matrix)
+    A = np.array(matrix, dtype=float)
     
-    ### Your diagonalizable matrix logic here (Richie) ###
+    eigvals, eigvecs = np.linalg.eig(A)
+    
+    rank = np.linalg.matrix_rank(eigvecs)
 
+    unique_eigs = np.unique(np.round(eigvals, 6))
+    diagonalizable = True
+
+    for eig in unique_eigs:
+        algebraic_mult = np.sum(np.isclose(eigvals, eig))
+
+        B = A - eig * np.eye(n)
+        geometric_mult = n - np.linalg.matrix_rank(B)
+
+        if geometric_mult < algebraic_mult:
+            diagonalizable = False
+
+
+    print("\nEigenvalues:")
+    print(np.round(eigvals, 4))
+
+    print("\nEigenvectors:")
+    print(np.round(eigvecs, 4))
+
+    if diagonalizable:
+        print("\nMatrix IS diagonalizable!")
+    else:
+        print("\nMatrix is NOT diagonalizable.")
+    
     print()
     print("Press Enter to go back to main menu...")
     input()
