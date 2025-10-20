@@ -229,7 +229,6 @@ ___             _                __
     matrix = input_squareMatrix()
     n = len(matrix)
     matrix = np.array(matrix)
-    ### Your dominant eigenvalue logic here (Weneville) ###
     eig, x = power_method(matrix)
     print(f"Dominant eigenvalue: {eig}")
     print(f"Dominant eigenvector: {x}")
@@ -250,12 +249,6 @@ def svd():
     A = np.array(input_matrix()) #A = U Σ VT
     m, n = A.shape
     r = min(m, n)
-
-    #AAT = A @ A.T
-    #lamU, U = np.linalg.eigh(AAT)
-    #idxU = lamU.argsort()[::-1]
-    #lamU = lamU[idxU]
-    #U = U[:, idxU]
 
     ATA = A.T @ A
     lamV, V = np.linalg.eigh(ATA)
