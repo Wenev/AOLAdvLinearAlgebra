@@ -247,7 +247,7 @@ def svd():
 `-----'   `-'    `-------'                         
 """)
     np.set_printoptions(precision=4, suppress=True)
-    A = np.array(input_matrix()) #A = U S VT
+    A = np.array(input_matrix()) #A = U Σ VT
     m, n = A.shape
     r = min(m, n)
 
@@ -270,8 +270,16 @@ def svd():
     eps = np.finfo(float).eps
     tol = max(m, n) * eps * (sigma[0] if r else 0.0)
     k = int(np.sum(sigma > tol)) # numerical rank
+    k = min(k, r)
 
     U = np.zeros((m, m))
+
+    if k > 0:
+        Uk = (A @ V[:, :k]) / sigma[:k][None, :]
+        U[:, :k] = Uk
+    else:
+        pass
+  
     U[:, :k] = (A @ V[:, :k]) / sigma[:k].reshape(1, -1)
 
     d = np.sign(np.diag(U[:, :k].T @ A @ V[:, :k]))
