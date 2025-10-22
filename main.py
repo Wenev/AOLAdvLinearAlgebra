@@ -227,11 +227,15 @@ ___             _                __
 """)
     
     matrix = input_squareMatrix()
-    n = len(matrix)
-    matrix = np.array(matrix)
-    eig, x = power_method(matrix)
-    print(f"Dominant eigenvalue: {eig}")
-    print(f"Dominant eigenvector: {x}")
+    matrix = np.array(matrix, dtype=float)
+
+    eig, x = power_method(matrix, iter=2000, tolerance=1e-9)
+
+    if eig is None:
+        print("Power method did not converge to a unique dominant eigenvalue.")
+    else:
+        print(f"Dominant eigenvalue: {eig}")
+        print(f"Dominant eigenvector: {x}")
     print("Press Enter to go back to main menu...")
     input()
     mainMenu()
