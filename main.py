@@ -67,16 +67,14 @@ def input_matrix():
         while True:
             row_input = input(f"Row {i + 1}: ").split()
 
-            # Check if number of entries matches 'cols'
             if len(row_input) != cols:
                 print(f"Row {i + 1} must have exactly {cols} entries. Try again.")
                 continue
 
             try:
-                # Convert all entries to float
                 row = [float(x) for x in row_input]
                 matrix.append(row)
-                break  # valid row -> go to next
+                break  
             except ValueError:
                 print(f"Row {i + 1} contains non-numeric values. Try again.")
 
@@ -101,13 +99,11 @@ def input_squareMatrix():
         while True:
             row_input = input(f"Row {i + 1}: ").split()
 
-            # Check if number of entries matches 'n'
             if len(row_input) != n:
                 print(f"Row {i + 1} must have exactly {n} entries. Try again.")
                 continue
 
             try:
-                # Convert entries to float
                 row = [float(x) for x in row_input]
                 matrix.append(row)
                 break  # valid row
@@ -193,7 +189,7 @@ __   __  __  ___                                   _ __  _
             else:
                 temp_sum = sum(lower[k][j] * upper[j][i] for j in range(i))
                 if upper[i][i] == 0:
-                    print("Matrix is singular — cannot perform LU decomposition.")
+                    print("Matrix is singular, cannot perform LU decomposition.")
                     print()
                     print("Press Enter to go back to main menu...")
                     input()
