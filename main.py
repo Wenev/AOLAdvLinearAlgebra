@@ -251,7 +251,7 @@ def svd():
     r = min(m, n)
 
     ATA = A.T @ A
-    lamV, V = np.linalg.eigh(ATA)              # lamV ascending
+    lamV, V = np.linalg.eigh(ATA)              
     idxV = np.argsort(lamV)[::-1]
     lamV = np.clip(lamV[idxV], 0.0, None)
     V = V[:, idxV]
@@ -291,7 +291,7 @@ def svd():
             raise RuntimeError("Could not complete basis deterministically with coordinate axes.")
 
     Sigma = np.zeros((m, n))
-    np.fill_diagonal(Sigma, sigma[:r])         # cleaner diagonal fill
+    np.fill_diagonal(Sigma, sigma[:r])
 
     def zapsmall(M, Aref, rel=50*np.finfo(float).eps, abs_=0.0):
         scale = np.linalg.norm(Aref, ord=np.inf)
