@@ -247,50 +247,55 @@ def svd():
 `-----'   `-'    `-------'                         
 """)
     np.set_printoptions(precision=4, suppress=True)
-    A = np.array(input_matrix()) #A = U Σ VT
+    A = np.array(input_matrix(), dtype=float)  # A = U Σ V^T
     m, n = A.shape
     r = min(m, n)
 
-    #AAT = A @ A.T
-    #lamU, U = np.linalg.eigh(AAT)
-    #idxU = lamU.argsort()[::-1]
-    #lamU = lamU[idxU]
-    #U = U[:, idxU]
-
     ATA = A.T @ A
-    lamV, V = np.linalg.eigh(ATA)
-    idxV = lamV.argsort()[::-1]
-    lamV = lamV[idxV]
+    lamV, V = np.linalg.eigh(ATA)              # lamV ascending
+    idxV = np.argsort(lamV)[::-1]
+    lamV = np.clip(lamV[idxV], 0.0, None)
     V = V[:, idxV]
 
-    #lamU = np.clip(lamU, 0.0, None)
-    lamV = np.clip(lamV, 0.0, None)
-    sigma = np.sqrt(lamV) #averaging in case of mismatch due to floating point rounding errors
+    sigma = np.sqrt(lamV)
 
     eps = np.finfo(float).eps
-    tol = max(m, n) * eps * (sigma[0] if r else 0.0)
-    k = int(np.sum(sigma > tol)) # numerical rank
-    k = min(k, r)
+    tol = max(m, n) * eps * (sigma[0] if sigma.size else 0.0)
+
+    k = min(np.count_nonzero(sigma > tol), r)
 
     U = np.zeros((m, m))
-    U[:, :k] = (A @ V[:, :k]) / sigma[:k].reshape(1, -1)
+    U[:, :k] = (A @ V[:, :k]) / sigma[:k]
 
     d = np.sign(np.diag(U[:, :k].T @ A @ V[:, :k]))
     d[d == 0] = 1.0
-    U[:, :k] *= d.reshape(1, -1)
-    V[:, :k] *= d.reshape(1, -1)
+    U[:, :k] *= d
+    V[:, :k] *= d
 
     if m > k:
-        Z = np.random.randn(m, m - k)
-        Z -= U[:, :k] @ (U[:, :k].T @ Z)
-        U2, _ = np.linalg.qr(Z)
-        U[:, k:] = U2
+        j = 0
+        i = 0
+        while j < (m - k) and i < m:
+            v = np.zeros(m)
+            v[i] = 1.0
+
+            v -= U[:, :k] @ (U[:, :k].T @ v)
+            v -= U[:, k:k+j] @ (U[:, k:k+j].T @ v)
+
+            nv = np.linalg.norm(v)
+            if nv > 1e-12:
+                U[:, k + j] = v / nv
+                j += 1
+            i += 1
+
+        if j < (m - k):
+            raise RuntimeError("Could not complete basis deterministically with coordinate axes.")
 
     Sigma = np.zeros((m, n))
-    Sigma[np.arange(r), np.arange(r)] = sigma[:r]
+    np.fill_diagonal(Sigma, sigma[:r])         # cleaner diagonal fill
 
-    def zapsmall(M, Aref=None, rel=50*np.finfo(float).eps, abs_=0.0):
-        scale = np.linalg.norm(A if Aref is None else Aref, ord=np.inf)
+    def zapsmall(M, Aref, rel=50*np.finfo(float).eps, abs_=0.0):
+        scale = np.linalg.norm(Aref, ord=np.inf)
         thr = abs_ + rel * scale
         M[np.abs(M) < thr] = 0.0
         return M
@@ -304,6 +309,7 @@ def svd():
     print("Press Enter to go back to main menu...")
     input()
     mainMenu()
+
     
 if __name__ == "__main__":
     mainMenu()
